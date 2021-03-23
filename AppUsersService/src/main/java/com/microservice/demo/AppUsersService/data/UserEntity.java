@@ -1,16 +1,46 @@
-package com.microservice.demo.AppUsersService.shared;
+package com.microservice.demo.AppUsersService.data;
 
 import java.io.Serializable;
 
-public class UserDto implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-	private static final long serialVersionUID = 3409310920598458683L;
+// Configure table and will create it if doesn't exist.
+@Entity
+@Table(name = "users")
+public class UserEntity implements Serializable {
+
+	private static final long serialVersionUID = -6246379098550731781L;
+
+	@Id
+	@GeneratedValue
+	private long id;
+	
+	@Column(nullable=false, length = 50)
 	private String firstName;
+	
+	@Column(nullable=false, length = 50)
 	private String lastName;
+	
+	@Column(nullable=false, length = 120, unique = true)
 	private String email;
-	private String password;
+
+	@Column(nullable=false, unique = true)
 	private String userId;
+	
+	@Column(nullable=false, unique = true)
 	private String encryptedPassword;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -36,14 +66,6 @@ public class UserDto implements Serializable {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getUserId() {
 		return userId;
 	}
@@ -59,4 +81,5 @@ public class UserDto implements Serializable {
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
 	}
+
 }
