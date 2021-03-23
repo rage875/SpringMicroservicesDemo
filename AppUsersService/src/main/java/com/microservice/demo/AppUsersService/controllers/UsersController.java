@@ -2,6 +2,8 @@ package com.microservice.demo.AppUsersService.controllers;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservice.demo.AppUsersService.model.CreateUserRequestModel;
+import com.microservice.demo.AppUsersService.service.UsersService;
+import com.microservice.demo.AppUsersService.shared.UserDto;
 
 @RestController
 @RequestMapping("/users")
@@ -18,6 +22,9 @@ public class UsersController {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private UsersService usersService;
 	
 	@GetMapping("/status/check")
 	public String status() {
@@ -29,6 +36,12 @@ public class UsersController {
 			@Valid
 			@RequestBody CreateUserRequestModel userDetails) {
 
-		return "String";
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+		usersService.createUser(userDto);
+		
+		return "Create user method is called";
 	}
 }
