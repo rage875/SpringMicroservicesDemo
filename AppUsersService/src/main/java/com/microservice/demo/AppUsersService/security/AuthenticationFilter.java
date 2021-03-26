@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +28,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	private UsersService usersService;
 	private Environment environment;
@@ -69,6 +73,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 			throws IOException, ServletException {
 		String userName = ((User)auth.getPrincipal()).getUsername();
 		UserDto userDetails = usersService.getUserDetailsByEmail(userName);
+		
+		logger.info("{" + environment.getProperty("token.expiration_time") + "}");
+		
 		String token = Jwts.builder()
 				.setSubject(userDetails.getUserId())
 				.setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("token.expiration_time"))))
