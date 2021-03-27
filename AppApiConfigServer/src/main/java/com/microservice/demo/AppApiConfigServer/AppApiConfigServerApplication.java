@@ -22,8 +22,8 @@ public class AppApiConfigServerApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		logger.info(String.format("SearchLoc: %s",
 				env.getProperty("spring.cloud.config.server.native.searchLocations")));
-		logger.info(String.format("Token: %s",
-				env.getProperty("token.secret")));
+		logger.info(String.format("Config server git uri: %s",
+				env.getProperty("spring.cloud.config.server.git.uri")));
 	}
 
 	public static void main(String[] args) {
